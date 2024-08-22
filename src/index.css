@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 275deg 73 58;
+    --color-secondary: 282deg 75 89;
+    --color-black: 0deg 0 0;
+    --color-white: 0deg 0 100;
+  }
+
+  :root[data-theme="dark"] {
+    --color-primary: 275deg 73 58;
+    --color-secondary: 282deg 75 89;
+    --color-black: 0deg 0 100;
+    --color-white: 0deg 0 0;
+  }
+}
