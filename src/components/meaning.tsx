@@ -1,56 +1,57 @@
+import useMeaning from "../query/useMeaning";
+import SearchedWord from "./searched-word";
+
 export default function Meaning() {
+  const { data, isPending, error } = useMeaning();
+
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const wordMeaning = data[0];
+  console.log(wordMeaning);
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-6">
-        <p className="text-xl font-bold">noun</p>
-        <hr className="w-full border-gray-200" />
-      </div>
-      <div className="flex flex-col gap-6">
-        <div className="text-gray-400">Meaning</div>
-        <ul className="flex list-disc flex-col gap-4 pl-10">
-          <li>
-            (etc.) A set of keys used to operate a typewriter, computer etc.
-          </li>
-          <li>
-            A component of many instruments including the piano, organ, and
-            harpsichord consisting of usually black and white keys that cause
-            different tones to be produced when struck.
-          </li>
-          <li>
-            A device with keys of a musical keyboard, used to control electronic
-            sound-producing devices which may be built into or separate from the
-            keyboard device.
-          </li>
-        </ul>
-        <div className="mt-10 flex items-center gap-4">
-          <p className="text-gray-400">Synonyms</p>
-          <p className="font-bold text-primary">electronic keyboard</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-6">
-        <p className="text-xl font-bold">verb</p>
-        <hr className="w-full border-gray-200" />
-      </div>
-      <div className="flex flex-col gap-6">
-        <div className="text-gray-400">Meaning</div>
-        <ul className="flex list-disc flex-col gap-4 pl-10">
-          <li>
-            To type on a computer keyboard.
-            <div className="mt-2 text-gray-400">
-              "Keyboarding is the part of this job I hate the most."
+      <SearchedWord />
+
+      {wordMeaning.meanings.map((meaning, index) => (
+        <div key={index}>
+          <div className="flex items-center gap-6">
+            <p className="text-xl font-bold">{meaning.partOfSpeech}</p>
+            <hr className="w-full border-gray-200" />
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="text-gray-400">Meaning</div>
+            {meaning.definitions.map((definition, defIndex) => (
+              <ul
+                key={defIndex}
+                className="flex list-disc flex-col gap-4 pl-10"
+              >
+                <li>{definition.definition}</li>
+              </ul>
+            ))}
+            <div className="mt-10 flex items-center gap-4">
+              <p className="text-gray-400">Synonyms</p>
+              <p className="font-bold text-primary">
+                {meaning.synonyms && meaning.synonyms.length > 0
+                  ? meaning.synonyms.join(", ")
+                  : "None"}
+              </p>
             </div>
-          </li>
-        </ul>
-      </div>
+          </div>
+        </div>
+      ))}
+
       <hr className="w-full border-black/10" />
       <div className="flex gap-4">
         <p className="text-gray-400">Source</p>
         <a
-          href="https://en.wiktionary.org/wiki/keyboard"
+          href={wordMeaning.sourceUrls[0]}
           target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm underline"
         >
-          https://en.wiktionary.org/wiki/keyboard
+          {wordMeaning.sourceUrls[0]}
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12">
             <path
               fill="gray"
